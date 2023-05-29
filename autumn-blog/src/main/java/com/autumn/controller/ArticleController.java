@@ -1,13 +1,12 @@
 package com.autumn.controller;
 
 
-import com.autumn.domain.entity.Article;
+import com.autumn.domain.ResponseResult;
 import com.autumn.service.ArticleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * @Author: qiuqiuya
@@ -24,8 +23,10 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/test")
-    public List<Article> test(){
-        return articleService.list();
+    @GetMapping("/hotArticleList")
+    public ResponseResult hotArticleList(){
+
+        ResponseResult result =  articleService.hotArticleList();
+        return result;
     }
 }
