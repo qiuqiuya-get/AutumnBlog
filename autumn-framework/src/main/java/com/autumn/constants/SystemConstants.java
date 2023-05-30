@@ -19,4 +19,8 @@ public class SystemConstants {
      */
     public static final int ARTICLE_MAXIMUM_NUMBER = 10;
     public static final String STATUS_NORMAL = "0";
+    /**
+     * 友链状态为通过
+     */
+    public static final String LINK_STATUS_NORMAL = "0";
 }
