@@ -1,19 +1,20 @@
-package com.autumn.domain.entity.vo;
+package com.autumn.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author: qiuqiuya
  * @Description:
- * @Date: 2023/5/28 16:53
+ * @Date: 2023/5/29 18:36
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryVo {
-    private Long id;
-    // 分类名
-    private String name;
+public class PageVo {
+    private List<ArticleListVo> rows;
+    private Long total;
 }

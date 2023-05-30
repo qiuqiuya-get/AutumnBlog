@@ -1,4 +1,4 @@
-package com.autumn.domain.entity.vo;
+package com.autumn.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

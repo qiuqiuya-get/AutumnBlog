@@ -4,7 +4,7 @@ import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Article;
 import com.autumn.domain.entity.Category;
-import com.autumn.domain.entity.vo.CategoryVo;
+import com.autumn.domain.vo.CategoryVo;
 import com.autumn.mapper.CategoryMapper;
 import com.autumn.service.ArticleService;
 import com.autumn.service.CategoryService;
