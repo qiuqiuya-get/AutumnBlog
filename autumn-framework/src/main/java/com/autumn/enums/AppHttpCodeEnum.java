@@ -1,4 +1,4 @@
-package com.autumn.domain.enums;
+package com.autumn.enums;
 
 /**
  * @Author: qiuqiuya

@@ -3,7 +3,7 @@ package com.autumn.filter;
 import com.alibaba.fastjson.JSON;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.LoginUser;
-import com.autumn.domain.enums.AppHttpCodeEnum;
+import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.utils.JwtUtil;
 import com.autumn.utils.RedisCache;
 import com.autumn.utils.WebUtils;

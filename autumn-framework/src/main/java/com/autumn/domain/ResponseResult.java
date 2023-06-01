@@ -6,7 +6,7 @@ package com.autumn.domain;
  * @Date: 2023/5/26 15:02
  */
 
-import com.autumn.domain.enums.AppHttpCodeEnum;
+import com.autumn.enums.AppHttpCodeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
