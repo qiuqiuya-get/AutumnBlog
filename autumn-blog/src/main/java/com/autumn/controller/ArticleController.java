@@ -1,6 +1,7 @@
 package com.autumn.controller;
 
 
+import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.service.ArticleService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class ArticleController {
     }
 
     @GetMapping("/hotArticleList")
+    @SystemLog(BusinessName = "获取热点文章列表")
     public ResponseResult hotArticleList(){
 
         ResponseResult result =  articleService.hotArticleList();
@@ -32,11 +34,13 @@ public class ArticleController {
     }
 
     @GetMapping("/articleList")
+    @SystemLog(BusinessName = "获取文章列表")
     public ResponseResult articleList(Integer pageNum,Integer pageSize,Long categoryId){
         return articleService.articleList(pageNum,pageSize,categoryId);
     }
 
     @GetMapping("/{id}")
+    @SystemLog(BusinessName = "获取文章详情")
     public ResponseResult getArticleDetail(@PathVariable("id") Long id){
         return articleService.getArticleDetail(id);
     }

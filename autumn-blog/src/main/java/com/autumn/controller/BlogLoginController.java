@@ -1,5 +1,6 @@
 package com.autumn.controller;
 
+import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.User;
 import com.autumn.enums.AppHttpCodeEnum;
@@ -22,6 +23,7 @@ public class BlogLoginController {
     private BlogLoginService blogLoginService;
 
     @PostMapping("/login")
+    @SystemLog(BusinessName = "用户登录")
     public ResponseResult login(@RequestBody User user){
         if(!StringUtils.hasText((user.getUserName()))){
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
@@ -30,6 +32,7 @@ public class BlogLoginController {
     }
 
     @PostMapping("/logout")
+    @SystemLog(BusinessName = "用户退出")
     public ResponseResult logout(){
         return blogLoginService.logout();
     }

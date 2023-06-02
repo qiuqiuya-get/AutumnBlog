@@ -20,6 +20,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/userInfo")
+    @SystemLog(BusinessName = "获取用户信息")
     public ResponseResult userInfo(){
         return userService.userInfo();
     }
@@ -31,6 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @SystemLog(BusinessName = "注册用户")
     public ResponseResult register(@RequestBody User user){
         return userService.register(user);
     }

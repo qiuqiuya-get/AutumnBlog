@@ -1,5 +1,6 @@
 package com.autumn.controller;
 
+import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class LinkController {
     private LinkService linkService;
 
     @GetMapping("/getAllLink")
+    @SystemLog(BusinessName = "获取全部友链")
     public ResponseResult getAllLink(){
         return linkService.getAllLink();
     }

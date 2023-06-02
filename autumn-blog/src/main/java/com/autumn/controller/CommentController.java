@@ -1,5 +1,6 @@
 package com.autumn.controller;
 
+import com.autumn.annotation.SystemLog;
 import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Comment;
@@ -20,16 +21,19 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/commentList")
+    @SystemLog(BusinessName = "获取文章评论列表")
     public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize){
         return commentService.commentList(SystemConstants.ARTICLE_COMMENT,articleId,pageNum,pageSize);
     }
 
     @PostMapping
+    @SystemLog(BusinessName = "添加评论")
     public ResponseResult addComment(@RequestBody Comment comment){
         return commentService.addComment(comment);
     }
 
     @GetMapping("/linkCommentList")
+    @SystemLog(BusinessName = "获取友链评论列表")
     public ResponseResult linkCommentList(Integer pageNum,Integer pageSize){
         return commentService.commentList(SystemConstants.LINK_COMMENT,null,pageNum,pageSize);
     }
