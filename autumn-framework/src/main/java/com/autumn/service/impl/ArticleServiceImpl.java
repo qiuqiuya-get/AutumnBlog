@@ -12,6 +12,7 @@ import com.autumn.mapper.ArticleMapper;
 import com.autumn.service.ArticleService;
 import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
+import com.autumn.utils.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -34,6 +35,9 @@ import static com.autumn.constants.SystemConstants.ARTICLE_STATUS_NORMAL;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
     @Override
     public ResponseResult hotArticleList() {
         //查询热门文章 封装成ResponseResult返回
@@ -108,5 +112,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         //封装响应返回
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        //更新redis中对应 id的浏览量
+        redisCache.incrementCacheMapValue("article:viewCount",id.toString(),1);
+        return ResponseResult.okResult();
     }
 }

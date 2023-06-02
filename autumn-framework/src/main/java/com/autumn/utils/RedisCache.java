@@ -42,6 +42,14 @@ public class RedisCache
     }
 
     /**
+     * 更新增长
+     */
+    public void incrementCacheMapValue(String key,String hKey,long v){
+        redisTemplate.boundHashOps(key).increment(hKey, v);
+    }
+
+
+    /**
      * 设置有效时间
      *
      * @param key Redis键
