@@ -3,6 +3,7 @@ package com.autumn.controller;
 import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.service.CategoryService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping("getCategoryList")
+    @ApiOperation(value = "获取文章分类",notes = "获取文章分类的种类")
     @SystemLog(BusinessName = "获取文章分类")
     public ResponseResult categoryList(){
         ResponseResult result = categoryService.getCategoryList();

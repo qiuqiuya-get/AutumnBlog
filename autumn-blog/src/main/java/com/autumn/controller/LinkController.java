@@ -3,6 +3,7 @@ package com.autumn.controller;
 import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.service.LinkService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class LinkController {
     private LinkService linkService;
 
     @GetMapping("/getAllLink")
+    @ApiOperation(value = "获取全部友链",notes = "获取全部友链的详细信息")
     @SystemLog(BusinessName = "获取全部友链")
     public ResponseResult getAllLink(){
         return linkService.getAllLink();
