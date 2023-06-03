@@ -6,6 +6,7 @@ import com.autumn.domain.entity.User;
 import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.exception.SystemException;
 import com.autumn.service.BlogLoginService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2023/6/1 10:19
  */
 @RestController
+@Api(tags = "登录退出",description = "用户登录登出接口")
 public class BlogLoginController {
     @Autowired
     private BlogLoginService blogLoginService;

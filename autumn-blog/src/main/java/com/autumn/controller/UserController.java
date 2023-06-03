@@ -4,6 +4,7 @@ import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.User;
 import com.autumn.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/user")
+@Api(tags = "用户信息",description = "用户信息相关与用户注册接口")
 public class UserController {
 
     @Autowired

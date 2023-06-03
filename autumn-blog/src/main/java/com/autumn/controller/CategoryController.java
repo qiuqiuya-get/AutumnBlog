@@ -3,6 +3,7 @@ package com.autumn.controller;
 import com.autumn.annotation.SystemLog;
 import com.autumn.domain.ResponseResult;
 import com.autumn.service.CategoryService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/category")
+@Api(tags = "分类",description = "文章分类相关")
 public class CategoryController {
 
     final
