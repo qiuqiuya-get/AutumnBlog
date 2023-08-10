@@ -24,7 +24,6 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.autumn.controller"))
                 .build();
     }
-
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Autumn文档")

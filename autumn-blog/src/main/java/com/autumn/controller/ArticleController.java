@@ -31,7 +31,6 @@ public class ArticleController {
     @ApiOperation(value = "获取热点文章列表",notes = "获取热点文章列表-包含标题和围观数")
     @SystemLog(BusinessName = "获取热点文章列表")
     public ResponseResult hotArticleList(){
-
         ResponseResult result =  articleService.hotArticleList();
         return result;
     }
