@@ -31,4 +31,8 @@ public class SystemConstants {
      * 评论类型：友链评论
      */
     public static final String LINK_COMMENT = "1";
+
+
+    public static final String MENU = "C";
+    public static final String BUTTON = "F";
 }
