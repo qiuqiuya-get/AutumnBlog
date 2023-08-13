@@ -2,7 +2,10 @@ package com.autumn.service;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Category;
+import com.autumn.domain.vo.CategoryVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @Author: qiuqiuya
@@ -11,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CategoryService extends IService<Category> {
     ResponseResult getCategoryList();
+
+    List<CategoryVo> listAllCategory();
 }

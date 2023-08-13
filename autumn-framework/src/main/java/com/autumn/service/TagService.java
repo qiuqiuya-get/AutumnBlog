@@ -4,7 +4,10 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.TagVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 
 /**
@@ -15,6 +18,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TagService extends IService<Tag> {
     ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
+    List<TagVo> listAllTag();
 }
 
 

@@ -4,13 +4,17 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.TagVo;
 import com.autumn.mapper.TagMapper;
 import com.autumn.service.TagService;
+import com.autumn.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * 标签(Tag)表服务实现类
@@ -34,6 +38,15 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         //封装数据返回
         PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Tag::getId,Tag::getName);
+        List<Tag> list = list(wrapper);
+        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(list, TagVo.class);
+        return tagVos;
     }
 }
 
