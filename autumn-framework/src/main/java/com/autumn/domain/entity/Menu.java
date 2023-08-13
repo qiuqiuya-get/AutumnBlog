@@ -2,14 +2,15 @@ package com.autumn.domain.entity;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * 菜单权限表(Menu)表实体类
@@ -22,6 +23,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_menu")
+@Accessors(chain = true)
 public class Menu extends Model<Menu> {
     //菜单ID
     private Long id;
@@ -59,6 +61,9 @@ public class Menu extends Model<Menu> {
     private String remark;
     
     private String delFlag;
+
+    @TableField(exist = false)
+    private List<Menu> children;
 
     }
 

@@ -2,8 +2,10 @@ package com.autumn.controllter;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.LoginUser;
+import com.autumn.domain.entity.Menu;
 import com.autumn.domain.entity.User;
 import com.autumn.domain.vo.AdminUserInfoVo;
+import com.autumn.domain.vo.RoutersVo;
 import com.autumn.domain.vo.UserInfoVo;
 import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.exception.SystemException;
@@ -57,4 +59,13 @@ public class LoginController {
         return ResponseResult.okResult(adminUserInfoVo);
     }
 
+    @GetMapping("getRouters")
+    public ResponseResult<RoutersVo> getRouters(){
+        Long userId = SecurityUtils.getUserId();
+        //查询menu 结果是tree的形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+        //封装数据返回
+        return ResponseResult.okResult(new RoutersVo(menus));
     }
+
+}
