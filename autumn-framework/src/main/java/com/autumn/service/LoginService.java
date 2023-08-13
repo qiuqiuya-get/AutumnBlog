@@ -11,5 +11,5 @@ import com.autumn.domain.entity.User;
 public interface LoginService {
     ResponseResult login(User user);
 
-//    ResponseResult logout();
+    ResponseResult logout();
 }

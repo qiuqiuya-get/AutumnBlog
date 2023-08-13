@@ -36,6 +36,12 @@ public class LoginController {
         return loginService.login(user);
     }
 
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout(){
+        return loginService.logout();
+    }
+
     @Autowired
     private MenuService menuService;
     @Autowired

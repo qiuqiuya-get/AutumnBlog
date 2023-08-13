@@ -10,6 +10,7 @@ import com.autumn.service.LoginService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.JwtUtil;
 import com.autumn.utils.RedisCache;
+import com.autumn.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +53,15 @@ public class SystemLoginServiceImpl implements LoginService {
         Map<String,String> map = new HashMap<>();
         map.put("token",jwt);
         return ResponseResult.okResult(map);
+    }
+
+    @Override
+    public ResponseResult logout() {
+        //获取当前登录的用户id
+        Long userId = SecurityUtils.getUserId();
+        //删除redis中对应的值
+        redisCache.deleteObject("login:"+userId);
+        return ResponseResult.okResult();
     }
 
 
