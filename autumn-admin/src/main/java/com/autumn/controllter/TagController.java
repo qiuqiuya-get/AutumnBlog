@@ -2,13 +2,13 @@ package com.autumn.controllter;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
+import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
 import com.autumn.domain.vo.TagVo;
 import com.autumn.service.TagService;
+import com.autumn.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,13 @@ public class TagController {
     public ResponseResult listAllTag(){
         List<TagVo> list = tagService.listAllTag();
         return ResponseResult.okResult(list);
+    }
+
+    @PostMapping
+    public ResponseResult addTag(@RequestBody TagListDto tagListDto){
+        System.out.println("-------"+tagListDto.toString());
+        Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
+        tagService.addTag(tag);
+        return ResponseResult.okResult("操作成功");
     }
 }

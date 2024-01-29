@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="at_blog@120.55.57.41" uuid="ac6dfa3f-9f0d-4c2a-9540-1265cd11e9a4">
+    <data-source source="LOCAL" name="at_blog@121.37.175.205" uuid="ac6dfa3f-9f0d-4c2a-9540-1265cd11e9a4">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://120.55.57.41:3306/at_blog</jdbc-url>
+      <jdbc-url>jdbc:mysql://121.37.175.205:3306/at_blog</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="0@120.55.57.41" uuid="dcd781e3-b450-435b-90a7-de57a7822ea5">
+    <data-source source="LOCAL" name="@121.37.175.205" uuid="dfcb612f-2006-42d9-bd2d-c50fa7dfae58">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
-      <jdbc-url>jdbc:redis://120.55.57.41:7000/0</jdbc-url>
+      <jdbc-url>jdbc:redis://121.37.175.205:7000/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

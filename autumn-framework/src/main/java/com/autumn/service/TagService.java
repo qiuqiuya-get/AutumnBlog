@@ -20,6 +20,8 @@ public interface TagService extends IService<Tag> {
     ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 
     List<TagVo> listAllTag();
+
+    ResponseResult addTag(Tag tag);
 }
 
 
