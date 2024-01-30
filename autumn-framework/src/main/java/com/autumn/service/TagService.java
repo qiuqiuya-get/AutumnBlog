@@ -4,6 +4,7 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.TagUpdateVo;
 import com.autumn.domain.vo.TagVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -22,6 +23,12 @@ public interface TagService extends IService<Tag> {
     List<TagVo> listAllTag();
 
     ResponseResult addTag(Tag tag);
+
+    ResponseResult deleteTag(Long id);
+
+    ResponseResult updateTag(Tag tag);
+
+    TagUpdateVo getOne(Long id);
 }
 
 

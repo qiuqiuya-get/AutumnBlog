@@ -4,6 +4,7 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.TagUpdateVo;
 import com.autumn.domain.vo.TagVo;
 import com.autumn.service.TagService;
 import com.autumn.utils.BeanCopyUtils;
@@ -31,9 +32,26 @@ public class TagController {
 
     @PostMapping
     public ResponseResult addTag(@RequestBody TagListDto tagListDto){
-        System.out.println("-------"+tagListDto.toString());
         Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
         tagService.addTag(tag);
+        return ResponseResult.okResult("操作成功");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteTag(@PathVariable("id") Long id){
+        tagService.deleteTag(id);
+        return ResponseResult.okResult("操作成功");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult updateGetOne(@PathVariable("id") Long id){
+        TagUpdateVo tagUpdateVo = tagService.getOne(id);
+        return new ResponseResult(200,"操作成功",tagUpdateVo);
+    }
+    @PutMapping
+    public ResponseResult updateTag(@RequestBody TagUpdateVo tagUpdateVo){
+        Tag tag = BeanCopyUtils.copyBean(tagUpdateVo, Tag.class);
+        tagService.updateTag(tag);
         return ResponseResult.okResult("操作成功");
     }
 }

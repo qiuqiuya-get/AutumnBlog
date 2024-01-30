@@ -4,11 +4,14 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.TagUpdateVo;
 import com.autumn.domain.vo.TagVo;
 import com.autumn.mapper.TagMapper;
 import com.autumn.service.TagService;
 import com.autumn.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -53,6 +56,34 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public ResponseResult addTag(Tag tag) {
         save(tag);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteTag(Long id) {
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id",id);
+        updateWrapper.set("del_flag", 1);
+        update(updateWrapper);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult updateTag(Tag tag) {
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id",tag.getId());
+        updateWrapper.set("name", tag.getName());
+        updateWrapper.set("remark",tag.getRemark());
+        update(updateWrapper);
+        return null;
+    }
+
+    @Override
+    public TagUpdateVo getOne(Long id) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",id);
+        Tag tag = getOne(queryWrapper);
+        TagUpdateVo tagUpdateVo = BeanCopyUtils.copyBean(tag, TagUpdateVo.class);
+        return tagUpdateVo;
     }
 }
 
