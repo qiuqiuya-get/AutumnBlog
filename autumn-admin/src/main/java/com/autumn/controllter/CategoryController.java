@@ -11,6 +11,7 @@ import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,7 @@ public class CategoryController {
         return ResponseResult.okResult(list);
     }
 
+    @PreAuthorize("@ps.hasPermissions('content:category:export')")
     @GetMapping("/export")
     public void export(HttpServletResponse response){
         try {

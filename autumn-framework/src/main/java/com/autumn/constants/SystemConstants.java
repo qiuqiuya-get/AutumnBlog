@@ -38,4 +38,7 @@ public class SystemConstants {
 
     /** 正常状态 */
     public static final String NORMAL = "0";
+
+    /** 管理员 **/
+    public static final String ADMAIN = "1";
 }

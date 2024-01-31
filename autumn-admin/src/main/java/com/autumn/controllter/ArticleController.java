@@ -4,10 +4,7 @@ import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.AddArticleDto;
 import com.autumn.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 文章
@@ -24,5 +21,9 @@ public class ArticleController {
         return articleService.add(article);
     }
 
+    @GetMapping("/list")
+    public ResponseResult articleList(int pageNum, int pageSize, String title, String summary){
+        return articleService.articleList(pageNum,pageSize,title,summary);
+    }
 
 }

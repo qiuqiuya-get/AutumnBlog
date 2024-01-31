@@ -147,4 +147,36 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagService.saveBatch(articleTags);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult articleList(int pageNum, int pageSize, String title, String summary) {
+        //查询条件
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (!Objects.isNull(title)){
+            lambdaQueryWrapper.like(Article::getTitle,title);
+        }
+        if (!Objects.isNull(summary)){
+            lambdaQueryWrapper.like(Article::getSummary,summary);
+        }
+        // 状态是正式发布的
+        lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        // 对isTop进行降序
+        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+
+        //分页查询
+        Page<Article> page = new Page<>(pageNum,pageSize);
+        page(page,lambdaQueryWrapper);
+
+        List<Article> articles = page.getRecords();
+        //查询categoryName
+        articles.stream()
+                .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()))
+                .collect(Collectors.toList());
+
+        //封装查询结果
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
+
+        PageVo pageVo = new PageVo(articleListVos,page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
 }
