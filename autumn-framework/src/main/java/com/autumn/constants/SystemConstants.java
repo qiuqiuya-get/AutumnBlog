@@ -41,4 +41,5 @@ public class SystemConstants {
 
     /** 管理员 **/
     public static final String ADMAIN = "1";
+    public static final int DELETE_FLAG = 1;
 }

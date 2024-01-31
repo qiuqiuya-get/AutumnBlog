@@ -17,6 +17,7 @@ import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,5 +179,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         PageVo pageVo = new PageVo(articleListVos,page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult updateArticle(Article article) {
+        updateById(article);
+        return ResponseResult.okResult("操作成功");
+    }
+
+    @Override
+    public ResponseResult delete(Long id) {
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id",id);
+        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+        update(updateWrapper);
+        return null;
     }
 }

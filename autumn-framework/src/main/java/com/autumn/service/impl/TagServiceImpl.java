@@ -1,5 +1,6 @@
 package com.autumn.service.impl;
 
+import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.TagListDto;
 import com.autumn.domain.entity.Tag;
@@ -62,7 +63,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public ResponseResult deleteTag(Long id) {
         UpdateWrapper updateWrapper = new UpdateWrapper();
         updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", 1);
+        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
