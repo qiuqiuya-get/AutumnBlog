@@ -1,5 +1,6 @@
 package com.autumn.service;
 
+import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,5 +17,15 @@ public interface MenuService extends IService<Menu> {
     List<String> selectPermsByUserId(Long id);
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
+
+    ResponseResult menuList(Integer status, String menuName);
+
+    ResponseResult addMenu(Menu menu);
+
+    ResponseResult menuById(Long id);
+
+    ResponseResult updateMenu(Menu menu);
+
+    ResponseResult deleteMenu(Long id);
 }
 

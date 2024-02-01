@@ -40,7 +40,7 @@ public class TagController {
     @DeleteMapping("/{id}")
     public ResponseResult deleteTag(@PathVariable("id") Long id){
         tagService.deleteTag(id);
-        return ResponseResult.okResult("操作成功");
+        return ResponseResult.okResult();
     }
 
     @GetMapping("/{id}")
@@ -52,6 +52,6 @@ public class TagController {
     public ResponseResult updateTag(@RequestBody TagUpdateVo tagUpdateVo){
         Tag tag = BeanCopyUtils.copyBean(tagUpdateVo, Tag.class);
         tagService.updateTag(tag);
-        return ResponseResult.okResult("操作成功");
+        return ResponseResult.okResult();
     }
 }

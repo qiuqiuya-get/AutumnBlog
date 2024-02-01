@@ -184,7 +184,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult updateArticle(Article article) {
         updateById(article);
-        return ResponseResult.okResult("操作成功");
+        return ResponseResult.okResult();
     }
 
     @Override
