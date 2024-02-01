@@ -19,7 +19,10 @@ public class RoleController {
     public ResponseResult roleList(Integer pageNum, Integer pageSize, String roleName, Integer status){
         return roleService.getRoleList(pageNum,pageSize,roleName,status);
     }
-
+    @GetMapping("/listAllRole")
+    public ResponseResult listAllRole(){
+        return roleService.getAllRole();
+    }
     @PutMapping("changeStatus")
     public ResponseResult changeStatus(@RequestBody RoleChangeVo roleChangeVo){
         return roleService.changeStatus(roleChangeVo);

@@ -2,6 +2,7 @@ package com.autumn.service;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.User;
+import com.autumn.domain.vo.RoleChangeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -18,5 +19,11 @@ public interface UserService extends IService<User> {
     ResponseResult updateUserInfo(User user);
 
     ResponseResult register(User user);
+
+    ResponseResult getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status);
+
+    ResponseResult deleteUser(Long id);
+
+    ResponseResult changeStatus(RoleChangeVo roleChangeVo);
 }
 

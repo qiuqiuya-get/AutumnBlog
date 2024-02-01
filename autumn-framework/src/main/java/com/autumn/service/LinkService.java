@@ -2,6 +2,7 @@ package com.autumn.service;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Link;
+import com.autumn.domain.vo.LinkUpdateDto;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -14,5 +15,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface LinkService extends IService<Link> {
 
     ResponseResult getAllLink();
+
+    ResponseResult linkList(Integer pageNum, Integer pageSize, String name, Integer status);
+
+    ResponseResult addTag(Link link);
+
+    LinkUpdateDto getOneUpdate(Long id);
+
+    ResponseResult updateTag(Link link);
+
+    ResponseResult deleteLink(Long id);
 }
 

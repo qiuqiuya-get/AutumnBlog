@@ -44,18 +44,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResponseResult getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status) {
         //分页查询
-        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Role> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (!Objects.isNull(roleName)){
-            queryWrapper.like(Role::getRoleName,roleName);
+            lambdaQueryWrapper.like(Role::getRoleName,roleName);
         }
         if (!Objects.isNull(status)) {
-            queryWrapper.eq(Role::getStatus, status);
+            lambdaQueryWrapper.eq(Role::getStatus, status);
         }
 
         Page<Role> page = new Page<>();
         page.setCurrent(pageNum);
         page.setSize(pageSize);
-        page(page, queryWrapper);
+        page(page, lambdaQueryWrapper);
         //封装数据返回
         PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
         return ResponseResult.okResult(pageVo);
@@ -77,5 +77,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getAllRole() {
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Role::getStatus,0);
+        List<Role> list = list(wrapper);
+        return new ResponseResult(200,"操作成功",list);
     }
 }

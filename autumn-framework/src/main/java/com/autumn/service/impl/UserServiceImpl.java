@@ -1,7 +1,11 @@
 package com.autumn.service.impl;
 
+import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
+import com.autumn.domain.entity.Role;
 import com.autumn.domain.entity.User;
+import com.autumn.domain.vo.PageVo;
+import com.autumn.domain.vo.RoleChangeVo;
 import com.autumn.domain.vo.UserInfoVo;
 import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.exception.SystemException;
@@ -10,11 +14,15 @@ import com.autumn.service.UserService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 /**
  * 用户表(User)表服务实现类
@@ -72,6 +80,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(encodePassword);
         //存入数据库
         save(user);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status) {
+        //分页查询
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if (!Objects.isNull(userName)){
+            queryWrapper.like(User::getUserName,userName);
+        }
+        if (!Objects.isNull(phonenumber)) {
+            queryWrapper.eq(User::getPhonenumber, phonenumber);
+        }
+        if (!Objects.isNull(status)) {
+            queryWrapper.eq(User::getStatus, status);
+        }
+
+        Page<User> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, queryWrapper);
+        //封装数据返回
+        PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult deleteUser(Long id) {
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id",id);
+        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+        update(updateWrapper);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult changeStatus(RoleChangeVo roleChangeVo) {
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id",roleChangeVo.getRoleId());
+        updateWrapper.set("status", roleChangeVo.getStatus());
+        update(updateWrapper);
         return ResponseResult.okResult();
     }
 

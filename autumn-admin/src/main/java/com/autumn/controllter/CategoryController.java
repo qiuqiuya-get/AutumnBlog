@@ -3,18 +3,16 @@ package com.autumn.controllter;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.autumn.domain.ResponseResult;
+import com.autumn.domain.dto.AddCategoryDto;
 import com.autumn.domain.entity.Category;
-import com.autumn.domain.vo.CategoryVo;
-import com.autumn.domain.vo.ExcelCategoryVo;
+import com.autumn.domain.vo.*;
 import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -55,5 +53,35 @@ public class CategoryController {
         }
     }
 
+
+    @GetMapping("list")
+    public ResponseResult categoryList(Integer pageNum, Integer pageSize, String name, Integer status){
+        return categoryService.categoryList(pageNum,pageSize,name,status);
+    }
+    @PutMapping("changeStatus")
+    public ResponseResult changeStatus(@RequestBody RoleChangeVo roleChangeVo){
+        return categoryService.changeStatus(roleChangeVo);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteRole(@PathVariable("id")Long id){
+        return categoryService.deleteRole(id);
+    }
+
+    @PostMapping
+    public ResponseResult addTag(@RequestBody AddCategoryDto addCategoryDto){
+        Category category = BeanCopyUtils.copyBean(addCategoryDto, Category.class);
+        return categoryService.addTag(category);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult updateGetOne(@PathVariable("id") Long id){
+        CategoryUpdateVo categoryUpdateVo = categoryService.getOneUpdate(id);
+        return new ResponseResult(200,"操作成功",categoryUpdateVo);
+    }
+    @PutMapping
+    public ResponseResult updateCategory(@RequestBody CategoryUpdateVo categoryUpdateVo){
+        Category category = BeanCopyUtils.copyBean(categoryUpdateVo, Category.class);
+        return categoryService.updateTag(category);
+    }
 
 }
