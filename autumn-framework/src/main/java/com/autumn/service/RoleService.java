@@ -1,5 +1,7 @@
 package com.autumn.service;
+import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Role;
+import com.autumn.domain.vo.RoleChangeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -12,5 +14,11 @@ import java.util.List;
  */
 public interface RoleService extends IService<Role> {
     List<String> selectRoleKeyByUserId(Long id);
+
+    ResponseResult getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status);
+
+    ResponseResult changeStatus(RoleChangeVo roleChangeVo);
+
+    ResponseResult deleteRole(Long id);
 }
 
