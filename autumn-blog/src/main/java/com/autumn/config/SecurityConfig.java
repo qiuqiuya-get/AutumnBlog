@@ -15,9 +15,10 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * @Author: qiuqiuya
- * @Description:
- * @Date: 2023/6/1 10:30
+ * SpringSecurity配置类
+ *
+ * @author YRS
+ * @since 2024/3/17 16:49
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

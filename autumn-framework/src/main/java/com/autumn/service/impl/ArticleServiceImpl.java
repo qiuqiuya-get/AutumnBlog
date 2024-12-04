@@ -44,7 +44,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private RedisCache redisCache;
     @Override
-    public ResponseResult hotArticleList() {
+    public ResponseResult<Object> hotArticleList() {
         //查询热门文章 封装成ResponseResult返回
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         //必须是正式文章
@@ -52,7 +52,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //按照浏览量进行排序
         queryWrapper.orderByDesc(Article::getViewCount);
         //最多只查询10条
-        Page<Article> page = new Page(1,ARTICLE_MAXIMUM_NUMBER);
+        Page<Article> page = new Page<>(1,ARTICLE_MAXIMUM_NUMBER);
         page(page,queryWrapper);
 
         List<Article> articles = page.getRecords();
@@ -71,7 +71,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
 
     @Override
-    public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
+    public ResponseResult<Object> articleList(Integer pageNum, Integer pageSize, Long categoryId) {
         //查询条件
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         // 如果 有categoryId 就要 查询时要和传入的相同
@@ -79,6 +79,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 状态是正式发布的
         lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
         // 对isTop进行降序
+        lambdaQueryWrapper.orderByDesc(Article::getId);
         lambdaQueryWrapper.orderByDesc(Article::getIsTop);
 
         //分页查询
