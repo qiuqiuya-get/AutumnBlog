@@ -1,16 +1,20 @@
 package com.autumn.domain;
 
-/**
- * @Author: qiuqiuya
- * @Description: 公共返回结果类
- * @Date: 2023/5/26 15:02
- */
-
 import com.autumn.enums.AppHttpCodeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * @Author: qiuqiuya
+ * 公共返回结果类
+ * @Date: 2023/5/26 15:02
+ */
+
+@Setter
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseResult<T> implements Serializable {
     private Integer code;
@@ -38,91 +42,65 @@ public class ResponseResult<T> implements Serializable {
         this.msg = msg;
     }
 
-    public static ResponseResult errorResult(int code, String msg) {
-        ResponseResult result = new ResponseResult();
+    public static ResponseResult<Object> errorResult(int code, String msg) {
+        ResponseResult<Object> result = new ResponseResult<>();
         return result.error(code, msg);
     }
-    public static ResponseResult okResult() {
-        ResponseResult result = new ResponseResult();
-        return result;
+    public static ResponseResult<Object> okResult() {
+        return new ResponseResult<>();
     }
-    public static ResponseResult okResult(int code, String msg) {
-        ResponseResult result = new ResponseResult();
+    public static ResponseResult<Object> okResult(int code, String msg) {
+        ResponseResult<Object> result = new ResponseResult<>();
         return result.ok(code, null, msg);
     }
 
-    public static ResponseResult okResult(Object data) {
-        ResponseResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getMsg());
+    public static ResponseResult<Object> okResult(Object data) {
+        ResponseResult<Object> result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getMsg());
         if(data!=null) {
             result.setData(data);
         }
         return result;
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums){
+    public static ResponseResult<Object> errorResult(AppHttpCodeEnum enums){
         return setAppHttpCodeEnum(enums,enums.getMsg());
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums, String msg){
+    public static ResponseResult<Object> errorResult(AppHttpCodeEnum enums, String msg){
         return setAppHttpCodeEnum(enums,msg);
     }
 
-    public static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums){
+    public static ResponseResult<Object> setAppHttpCodeEnum(AppHttpCodeEnum enums){
         return okResult(enums.getCode(),enums.getMsg());
     }
 
-    private static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums, String msg){
+    private static ResponseResult<Object> setAppHttpCodeEnum(AppHttpCodeEnum enums, String msg){
         return okResult(enums.getCode(),msg);
     }
 
-    public ResponseResult<?> error(Integer code, String msg) {
+    public ResponseResult<T> error(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
         return this;
     }
 
-    public ResponseResult<?> ok(Integer code, T data) {
+    public ResponseResult<T> ok(Integer code, T data) {
         this.code = code;
         this.data = data;
         return this;
     }
 
-    public ResponseResult<?> ok(Integer code, T data, String msg) {
+    public ResponseResult<T> ok(Integer code, T data, String msg) {
         this.code = code;
         this.data = data;
         this.msg = msg;
         return this;
     }
 
-    public ResponseResult<?> ok(T data) {
+    public ResponseResult<T> ok(T data) {
         this.data = data;
         return this;
     }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
 
 
 }
