@@ -15,19 +15,19 @@ import java.util.List;
  * @Date: 2023/5/28 16:42
  */
 public interface CategoryService extends IService<Category> {
-    ResponseResult getCategoryList();
+    ResponseResult<Object> getCategoryList();
 
     List<CategoryVo> listAllCategory();
 
-    ResponseResult categoryList(Integer pageNum, Integer pageSize, String name, Integer status);
+    ResponseResult<Object> categoryList(Integer pageNum, Integer pageSize, String name, Integer status);
 
-    ResponseResult changeStatus(RoleChangeVo roleChangeVo);
+    ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo);
 
-    ResponseResult deleteRole(Long id);
+    ResponseResult<Object> deleteRole(Long id);
 
-    ResponseResult addTag(Category category);
+    ResponseResult<Object> addTag(Category category);
 
     CategoryUpdateVo getOneUpdate(Long id);
 
-    ResponseResult updateTag(Category category);
+    ResponseResult<Object> updateTag(Category category);
 }

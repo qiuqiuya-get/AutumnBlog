@@ -8,24 +8,23 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Author: qiuqiuya
- * @Description:
  * @Date: 2023/5/25 22:52
  */
 @Service
 public interface ArticleService extends IService<Article> {
-    ResponseResult hotArticleList();
+    ResponseResult<Object> hotArticleList();
 
-    ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId);
+    ResponseResult<Object> articleList(Integer pageNum, Integer pageSize, Long categoryId);
 
-    ResponseResult getArticleDetail(Long id);
+    ResponseResult<Object> getArticleDetail(Long id);
 
-    ResponseResult updateViewCount(Long id);
+    ResponseResult<Object> updateViewCount(Long id);
 
-    ResponseResult add(AddArticleDto article);
+    ResponseResult<Object> add(AddArticleDto article);
 
-    ResponseResult articleList(int pageNum, int pageSize, String title, String summary);
+    ResponseResult<Object> articleList(int pageNum, int pageSize, String title, String summary);
 
-    ResponseResult updateArticle(Article article);
+    ResponseResult<Object> updateArticle(Article article);
 
-    ResponseResult delete(Long id);
+    ResponseResult<Object> delete(Long id);
 }

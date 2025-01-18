@@ -10,6 +10,7 @@ import com.autumn.domain.vo.ArticleDetailVo;
 import com.autumn.domain.vo.ArticleListVo;
 import com.autumn.domain.vo.HotArticleVo;
 import com.autumn.domain.vo.PageVo;
+import com.autumn.enums.AppHttpCodeEnum;
 import com.autumn.mapper.ArticleMapper;
 import com.autumn.service.ArticleService;
 import com.autumn.service.ArticleTagService;
@@ -17,7 +18,7 @@ import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ import static com.autumn.constants.SystemConstants.ARTICLE_STATUS_NORMAL;
 
 /**
  * @Author: qiuqiuya
- * @Description:
  * @Date: 2023/5/25 23:00
  */
 @Component
@@ -43,28 +43,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private RedisCache redisCache;
+
     @Override
     public ResponseResult<Object> hotArticleList() {
         //查询热门文章 封装成ResponseResult返回
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        //必须是正式文章
-        queryWrapper.eq(Article::getStatus,ARTICLE_STATUS_NORMAL);
-        //按照浏览量进行排序
-        queryWrapper.orderByDesc(Article::getViewCount);
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<Article>()
+                .eq(Article::getStatus, ARTICLE_STATUS_NORMAL)//必须是正式文章
+                .orderByDesc(Article::getViewCount);//按照浏览量进行排序
         //最多只查询10条
-        Page<Article> page = new Page<>(1,ARTICLE_MAXIMUM_NUMBER);
-        page(page,queryWrapper);
+        Page<Article> page = new Page<>(1, ARTICLE_MAXIMUM_NUMBER);
+        page(page, queryWrapper);
 
         List<Article> articles = page.getRecords();
 
         //bean拷贝
         List<HotArticleVo> vs = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
-//        List<HotArticleVo> articleVos = new ArrayList<>();
-//        for (Article article : articles) {
-//            HotArticleVo vo = new HotArticleVo();
-//            BeanUtils.copyProperties(article,vo);
-//            articleVos.add(vo);
-//        }
 
         return ResponseResult.okResult(vs);
     }
@@ -75,7 +68,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //查询条件
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         // 如果 有categoryId 就要 查询时要和传入的相同
-        lambdaQueryWrapper.eq(Objects.nonNull(categoryId)&&categoryId>0 ,Article::getCategoryId,categoryId);
+        lambdaQueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0, Article::getCategoryId, categoryId);
         // 状态是正式发布的
         lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
         // 对isTop进行降序
@@ -83,29 +76,24 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.orderByDesc(Article::getIsTop);
 
         //分页查询
-        Page<Article> page = new Page<>(pageNum,pageSize);
-        page(page,lambdaQueryWrapper);
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        page(page, lambdaQueryWrapper);
 
         List<Article> articles = page.getRecords();
         //查询categoryName
-        articles.stream()
+        articles = articles.stream()
                 .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()))
                 .collect(Collectors.toList());
-        //articleId去查询articleName进行设置
-//        for (Article article : articles) {
-//            Category category = categoryService.getById(article.getCategoryId());
-//            article.setCategoryName(category.getName());
-//        }
 
         //封装查询结果
-        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(articles, ArticleListVo.class);
 
-        PageVo pageVo = new PageVo(articleListVos,page.getTotal());
+        PageVo pageVo = new PageVo(articleListVos, page.getTotal());
         return ResponseResult.okResult(pageVo);
     }
 
     @Override
-    public ResponseResult getArticleDetail(Long id) {
+    public ResponseResult<Object> getArticleDetail(Long id) {
         //根据id查询文章
         Article article = getById(id);
         //从redis中获取viewCount
@@ -116,7 +104,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //根据分类id查询分类名
         Long categoryId = articleDetailVo.getCategoryId();
         Category category = categoryService.getById(categoryId);
-        if(category!=null){
+        if (category != null) {
             articleDetailVo.setCategoryName(category.getName());
         }
         //封装响应返回
@@ -124,9 +112,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ResponseResult updateViewCount(Long id) {
+    public ResponseResult<Object> updateViewCount(Long id) {
         //更新redis中对应 id的浏览量
-        redisCache.incrementCacheMapValue("article:viewCount",id.toString(),1);
+        redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
         return ResponseResult.okResult();
     }
 
@@ -135,7 +123,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional
-    public ResponseResult add(AddArticleDto articleDto) {
+    public ResponseResult<Object> add(AddArticleDto articleDto) {
         //添加 博客
         Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
         save(article);
@@ -151,14 +139,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ResponseResult articleList(int pageNum, int pageSize, String title, String summary) {
+    public ResponseResult<Object> articleList(int pageNum, int pageSize, String title, String summary) {
         //查询条件
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if (!Objects.isNull(title)){
-            lambdaQueryWrapper.like(Article::getTitle,title);
+        if (!Objects.isNull(title)) {
+            lambdaQueryWrapper.like(Article::getTitle, title);
         }
-        if (!Objects.isNull(summary)){
-            lambdaQueryWrapper.like(Article::getSummary,summary);
+        if (!Objects.isNull(summary)) {
+            lambdaQueryWrapper.like(Article::getSummary, summary);
         }
         // 状态是正式发布的
         lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
@@ -166,34 +154,34 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.orderByDesc(Article::getIsTop);
 
         //分页查询
-        Page<Article> page = new Page<>(pageNum,pageSize);
-        page(page,lambdaQueryWrapper);
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        page(page, lambdaQueryWrapper);
 
         List<Article> articles = page.getRecords();
         //查询categoryName
-        articles.stream()
+        articles = articles.stream()
                 .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()))
                 .collect(Collectors.toList());
 
         //封装查询结果
-        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(articles, ArticleListVo.class);
 
-        PageVo pageVo = new PageVo(articleListVos,page.getTotal());
+        PageVo pageVo = new PageVo(articleListVos, page.getTotal());
         return ResponseResult.okResult(pageVo);
     }
 
     @Override
-    public ResponseResult updateArticle(Article article) {
+    public ResponseResult<Object> updateArticle(Article article) {
         updateById(article);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult delete(Long id) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
-        update(updateWrapper);
-        return null;
+    public ResponseResult<Object> delete(Long id) {
+        LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<Article>()
+                .eq(Article::getId, id)
+                .eq(Article::getDelFlag, SystemConstants.DELETE_FLAG);
+        boolean update = update(updateWrapper);
+        return update ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
 }

@@ -27,12 +27,12 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/listAllCategory")
-    public ResponseResult listAllCategory(){
+    public ResponseResult<Object> listAllCategory(){
         List<CategoryVo> list = categoryService.listAllCategory();
         return ResponseResult.okResult(list);
     }
 
-    @PreAuthorize("@ps.hasPermissions('content:category:export')")
+    @PreAuthorize("@ps.hasPermission('content:category:export')")
     @GetMapping("/export")
     public void export(HttpServletResponse response){
         try {
@@ -48,38 +48,38 @@ public class CategoryController {
 
         } catch (Exception e) {
             //如果出现异常也要响应json
-            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+            ResponseResult<Object> result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
             WebUtils.renderString(response, JSON.toJSONString(result));
         }
     }
 
 
     @GetMapping("list")
-    public ResponseResult categoryList(Integer pageNum, Integer pageSize, String name, Integer status){
+    public ResponseResult<Object> categoryList(Integer pageNum, Integer pageSize, String name, Integer status){
         return categoryService.categoryList(pageNum,pageSize,name,status);
     }
     @PutMapping("changeStatus")
-    public ResponseResult changeStatus(@RequestBody RoleChangeVo roleChangeVo){
+    public ResponseResult<Object> changeStatus(@RequestBody RoleChangeVo roleChangeVo){
         return categoryService.changeStatus(roleChangeVo);
     }
     @DeleteMapping("/{id}")
-    public ResponseResult deleteRole(@PathVariable("id")Long id){
+    public ResponseResult<Object> deleteRole(@PathVariable("id")Long id){
         return categoryService.deleteRole(id);
     }
 
     @PostMapping
-    public ResponseResult addTag(@RequestBody AddCategoryDto addCategoryDto){
+    public ResponseResult<Object> addTag(@RequestBody AddCategoryDto addCategoryDto){
         Category category = BeanCopyUtils.copyBean(addCategoryDto, Category.class);
         return categoryService.addTag(category);
     }
 
     @GetMapping("/{id}")
-    public ResponseResult updateGetOne(@PathVariable("id") Long id){
+    public ResponseResult<Object> updateGetOne(@PathVariable("id") Long id){
         CategoryUpdateVo categoryUpdateVo = categoryService.getOneUpdate(id);
-        return new ResponseResult(200,"操作成功",categoryUpdateVo);
+        return new ResponseResult<>(200,"操作成功",categoryUpdateVo);
     }
     @PutMapping
-    public ResponseResult updateCategory(@RequestBody CategoryUpdateVo categoryUpdateVo){
+    public ResponseResult<Object> updateCategory(@RequestBody CategoryUpdateVo categoryUpdateVo){
         Category category = BeanCopyUtils.copyBean(categoryUpdateVo, Category.class);
         return categoryService.updateTag(category);
     }
