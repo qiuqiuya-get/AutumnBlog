@@ -32,7 +32,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     private RedisCache redisCache;
 
     @Override
-    public ResponseResult login(User user) {
+    public ResponseResult<Object> login(User user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(user.getUserName());
@@ -55,7 +55,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     }
 
     @Override
-    public ResponseResult logout() {
+    public ResponseResult<Object> logout() {
         //获取token 解析获取userid
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();

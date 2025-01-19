@@ -13,8 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CommentService extends IService<Comment> {
 
-    ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize);
+    ResponseResult<Object> commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize);
 
-    ResponseResult addComment(Comment comment);
+    ResponseResult<Object> addComment(Comment comment);
 }
 

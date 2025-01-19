@@ -33,7 +33,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseResult<Object> commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
         //查询对应文章的根评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         //对articleId进行判断
@@ -45,7 +45,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         queryWrapper.eq(Comment::getType,commentType);
 
         //分页查询
-        Page<Comment> page = new Page(pageNum,pageSize);
+        Page<Comment> page = new Page<>(pageNum,pageSize);
         page(page,queryWrapper);
 
         List<CommentVo> commentVoList = toCommentVoList(page.getRecords());
@@ -62,7 +62,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public ResponseResult addComment(Comment comment) {
+    public ResponseResult<Object> addComment(Comment comment) {
         //评论内容不能为空
         if(!StringUtils.hasText(comment.getContent())){
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
@@ -78,7 +78,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     /**
      * 根据根评论的id查询所对应的子评论的集合
      * @param id 根评论的id
-     * @return
      */
     private List<CommentVo> getChildren(Long id) {
 
@@ -87,8 +86,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         queryWrapper.orderByAsc(Comment::getCreateTime);
         List<Comment> comments = list(queryWrapper);
 
-        List<CommentVo> commentVos = toCommentVoList(comments);
-        return commentVos;
+        return toCommentVoList(comments);
     }
 
     private List<CommentVo> toCommentVoList(List<Comment> list){

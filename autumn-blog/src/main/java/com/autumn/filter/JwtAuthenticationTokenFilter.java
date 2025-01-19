@@ -8,6 +8,7 @@ import com.autumn.utils.JwtUtil;
 import com.autumn.utils.RedisCache;
 import com.autumn.utils.WebUtils;
 import io.jsonwebtoken.Claims;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +35,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private RedisCache redisCache;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         //获取请求头中的token
         String token = request.getHeader("token");
         if(!StringUtils.hasText(token)){
@@ -43,14 +44,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return;
         }
         //解析获取userid
-        Claims claims = null;
+        Claims claims;
         try {
             claims = JwtUtil.parseJWT(token);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("token解析:"+e.getMessage());
             //token超时  token非法
             //响应告诉前端需要重新登录
-            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+            ResponseResult<Object> result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
             WebUtils.renderString(response, JSON.toJSONString(result));
             return;
         }
@@ -60,7 +61,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //如果获取不到
         if(Objects.isNull(loginUser)){
             //说明登录过期  提示重新登录
-            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+            ResponseResult<Object> result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
             WebUtils.renderString(response, JSON.toJSONString(result));
             return;
         }

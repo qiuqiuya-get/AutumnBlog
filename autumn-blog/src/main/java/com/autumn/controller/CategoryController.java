@@ -29,8 +29,7 @@ public class CategoryController {
     @GetMapping("getCategoryList")
     @ApiOperation(value = "获取文章分类",notes = "获取文章分类的种类")
     @SystemLog(BusinessName = "获取文章分类")
-    public ResponseResult categoryList(){
-        ResponseResult result = categoryService.getCategoryList();
-        return result;
+    public ResponseResult<Object> categoryList(){
+        return categoryService.getCategoryList();
     }
 }

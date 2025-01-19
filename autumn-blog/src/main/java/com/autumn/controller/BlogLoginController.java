@@ -33,7 +33,7 @@ public class BlogLoginController {
             @ApiImplicitParam(name = "User",value = "用户实体")
     })
     @SystemLog(BusinessName = "用户登录")
-    public ResponseResult login(@RequestBody User user){
+    public ResponseResult<Object> login(@RequestBody User user){
         if(!StringUtils.hasText((user.getUserName()))){
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
         }
@@ -43,7 +43,7 @@ public class BlogLoginController {
     @PostMapping("/logout")
     @ApiOperation(value = "用户退出",notes = "用户退出登录状态")
     @SystemLog(BusinessName = "用户退出")
-    public ResponseResult logout(){
+    public ResponseResult<Object> logout(){
         return blogLoginService.logout();
     }
 }

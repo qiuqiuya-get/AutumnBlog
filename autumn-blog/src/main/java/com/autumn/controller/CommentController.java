@@ -35,7 +35,7 @@ public class CommentController {
             @ApiImplicitParam(name = "pageSize",value = "每页大小")
     })
     @SystemLog(BusinessName = "获取文章评论列表")
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize){
+    public ResponseResult<Object> commentList(Long articleId, Integer pageNum, Integer pageSize){
         return commentService.commentList(SystemConstants.ARTICLE_COMMENT,articleId,pageNum,pageSize);
     }
 
@@ -45,7 +45,7 @@ public class CommentController {
             @ApiImplicitParam(name = "AddCommentDto",value = "评论实体")
     })
     @SystemLog(BusinessName = "添加评论")
-    public ResponseResult addComment(@RequestBody AddCommentDto addCommentDto){
+    public ResponseResult<Object> addComment(@RequestBody AddCommentDto addCommentDto){
         Comment comment = BeanCopyUtils.copyBean(addCommentDto, Comment.class);
         return commentService.addComment(comment);
     }
@@ -57,7 +57,7 @@ public class CommentController {
             @ApiImplicitParam(name = "pageSize",value = "每页大小")
     })
     @SystemLog(BusinessName = "获取友链评论列表")
-    public ResponseResult linkCommentList(Integer pageNum,Integer pageSize){
+    public ResponseResult<Object> linkCommentList(Integer pageNum,Integer pageSize){
         return commentService.commentList(SystemConstants.LINK_COMMENT,null,pageNum,pageSize);
     }
 }

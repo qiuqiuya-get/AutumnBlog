@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/userInfo")
     @ApiOperation(value = "获取文用户信息",notes = "获取当前登录的用户的用户信息")
     @SystemLog(BusinessName = "获取用户信息")
-    public ResponseResult userInfo(){
+    public ResponseResult<Object> userInfo(){
         return userService.userInfo();
     }
 
@@ -37,7 +37,7 @@ public class UserController {
             @ApiImplicitParam(name = "User",value = "用户实体")
     })
     @SystemLog(BusinessName = "更新用户信息")
-    public ResponseResult updateUserInfo(@RequestBody User user){
+    public ResponseResult<Object> updateUserInfo(@RequestBody User user){
         return userService.updateUserInfo(user);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
             @ApiImplicitParam(name = "User",value = "用户实体")
     })
     @SystemLog(BusinessName = "注册用户")
-    public ResponseResult register(@RequestBody User user){
+    public ResponseResult<Object> register(@RequestBody User user){
         return userService.register(user);
     }
 }

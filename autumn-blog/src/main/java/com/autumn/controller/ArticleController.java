@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/article")
-@Api(tags = "文章",description = "文章相关接口")
+@Api(tags = "文章", description = "文章相关接口")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -30,9 +30,8 @@ public class ArticleController {
     @GetMapping("/hotArticleList")
     @ApiOperation(value = "获取热点文章列表",notes = "获取热点文章列表-包含标题和围观数")
     @SystemLog(BusinessName = "获取热点文章列表")
-    public ResponseResult hotArticleList(){
-        ResponseResult result =  articleService.hotArticleList();
-        return result;
+    public ResponseResult<Object> hotArticleList(){
+        return articleService.hotArticleList();
     }
 
     @GetMapping("/articleList")
@@ -43,7 +42,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "categoryId",value = "文章分类id")
     })
     @SystemLog(BusinessName = "获取文章列表")
-    public ResponseResult articleList(Integer pageNum,Integer pageSize,Long categoryId){
+    public ResponseResult<Object> articleList(Integer pageNum,Integer pageSize,Long categoryId){
         return articleService.articleList(pageNum,pageSize,categoryId);
     }
 
@@ -53,7 +52,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "id",value = "文章id")
     })
     @SystemLog(BusinessName = "更新浏览量")
-    public ResponseResult updateViewCount(@PathVariable("id") Long id){
+    public ResponseResult<Object> updateViewCount(@PathVariable("id") Long id){
         return articleService.updateViewCount(id);
     }
 
@@ -63,7 +62,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "id",value = "文章id")
     })
     @SystemLog(BusinessName = "获取文章详情")
-    public ResponseResult getArticleDetail(@PathVariable("id") Long id){
+    public ResponseResult<Object> getArticleDetail(@PathVariable("id") Long id){
         return articleService.getArticleDetail(id);
     }
 }

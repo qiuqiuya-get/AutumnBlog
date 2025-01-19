@@ -26,7 +26,7 @@ public class LinkController {
     @GetMapping("/getAllLink")
     @ApiOperation(value = "获取全部友链",notes = "获取全部友链的详细信息")
     @SystemLog(BusinessName = "获取全部友链")
-    public ResponseResult getAllLink(){
+    public ResponseResult<Object> getAllLink(){
         return linkService.getAllLink();
     }
 }
