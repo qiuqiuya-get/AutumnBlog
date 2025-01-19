@@ -14,16 +14,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
-    ResponseResult userInfo();
+    ResponseResult<Object> userInfo();
 
-    ResponseResult updateUserInfo(User user);
+    ResponseResult<Object> updateUserInfo(User user);
 
-    ResponseResult register(User user);
+    ResponseResult<Object> register(User user);
 
-    ResponseResult getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status);
+    ResponseResult<Object> getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status);
 
-    ResponseResult deleteUser(Long id);
+    ResponseResult<Object> deleteUser(Long id);
 
-    ResponseResult changeStatus(RoleChangeVo roleChangeVo);
+    ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo);
 }
 

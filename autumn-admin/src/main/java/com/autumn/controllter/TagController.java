@@ -25,31 +25,31 @@ public class TagController {
     }
 
     @GetMapping("/listAllTag")
-    public ResponseResult listAllTag(){
+    public ResponseResult<Object> listAllTag(){
         List<TagVo> list = tagService.listAllTag();
         return ResponseResult.okResult(list);
     }
 
     @PostMapping
-    public ResponseResult addTag(@RequestBody TagListDto tagListDto){
+    public ResponseResult<Object> addTag(@RequestBody TagListDto tagListDto){
         Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
         tagService.addTag(tag);
         return ResponseResult.okResult("操作成功");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseResult deleteTag(@PathVariable("id") Long id){
+    public ResponseResult<Object> deleteTag(@PathVariable("id") Long id){
         tagService.deleteTag(id);
         return ResponseResult.okResult();
     }
 
     @GetMapping("/{id}")
-    public ResponseResult updateGetOne(@PathVariable("id") Long id){
+    public ResponseResult<Object> updateGetOne(@PathVariable("id") Long id){
         TagUpdateVo tagUpdateVo = tagService.getOne(id);
-        return new ResponseResult(200,"操作成功",tagUpdateVo);
+        return new ResponseResult<>(200,"操作成功",tagUpdateVo);
     }
     @PutMapping
-    public ResponseResult updateTag(@RequestBody TagUpdateVo tagUpdateVo){
+    public ResponseResult<Object> updateTag(@RequestBody TagUpdateVo tagUpdateVo){
         Tag tag = BeanCopyUtils.copyBean(tagUpdateVo, Tag.class);
         tagService.updateTag(tag);
         return ResponseResult.okResult();

@@ -28,7 +28,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     @PostMapping("/user/login")
-    public ResponseResult login(@RequestBody User user){
+    public ResponseResult<Object> login(@RequestBody User user){
         if(!StringUtils.hasText(user.getUserName())){
             //提示 必须要传用户名
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
@@ -38,7 +38,7 @@ public class LoginController {
 
 
     @PostMapping("/user/logout")
-    public ResponseResult logout(){
+    public ResponseResult<Object> logout(){
         return loginService.logout();
     }
 

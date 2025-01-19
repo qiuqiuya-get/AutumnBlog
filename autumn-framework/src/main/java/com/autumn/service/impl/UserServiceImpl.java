@@ -2,7 +2,6 @@ package com.autumn.service.impl;
 
 import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
-import com.autumn.domain.entity.Role;
 import com.autumn.domain.entity.User;
 import com.autumn.domain.vo.PageVo;
 import com.autumn.domain.vo.RoleChangeVo;
@@ -14,7 +13,7 @@ import com.autumn.service.UserService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ import java.util.Objects;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
-    public ResponseResult userInfo() {
+    public ResponseResult<Object> userInfo() {
         //获取当前用户id
         Long userId = SecurityUtils.getUserId();
         //根据用户id查询用户信息
@@ -45,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public ResponseResult updateUserInfo(User user) {
+    public ResponseResult<Object> updateUserInfo(User user) {
         updateById(user);
         return ResponseResult.okResult();
     }
@@ -53,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
-    public ResponseResult register(User user) {
+    public ResponseResult<Object> register(User user) {
         //对数据进行非空判断
         if(!StringUtils.hasText(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_NOT_NULL);
@@ -84,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public ResponseResult getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status) {
+    public ResponseResult<Object> getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status) {
         //分页查询
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         if (!Objects.isNull(userName)){
@@ -107,19 +106,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public ResponseResult deleteUser(Long id) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+    public ResponseResult<Object> deleteUser(Long id) {
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>()
+                .eq(User::getId,id)
+                .set(User::getDelFlag, SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult changeStatus(RoleChangeVo roleChangeVo) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",roleChangeVo.getRoleId());
-        updateWrapper.set("status", roleChangeVo.getStatus());
+    public ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo) {
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>()
+                .eq(User::getId,roleChangeVo.getRoleId())
+                .set(User::getStatus, roleChangeVo.getStatus());
         update(updateWrapper);
         return ResponseResult.okResult();
     }

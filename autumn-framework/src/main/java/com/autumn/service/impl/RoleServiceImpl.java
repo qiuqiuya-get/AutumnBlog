@@ -2,19 +2,16 @@ package com.autumn.service.impl;
 
 import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
-import com.autumn.domain.entity.Menu;
 import com.autumn.domain.entity.Role;
-import com.autumn.domain.entity.Tag;
 import com.autumn.domain.vo.PageVo;
 import com.autumn.domain.vo.RoleChangeVo;
 import com.autumn.mapper.RoleMapper;
 import com.autumn.service.RoleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public ResponseResult getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status) {
+    public ResponseResult<Object> getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status) {
         //分页查询
         LambdaQueryWrapper<Role> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (!Objects.isNull(roleName)){
@@ -62,28 +59,28 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public ResponseResult changeStatus(RoleChangeVo roleChangeVo) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",roleChangeVo.getRoleId());
-        updateWrapper.set("status", roleChangeVo.getStatus());
+    public ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo) {
+        LambdaUpdateWrapper<Role> updateWrapper = new LambdaUpdateWrapper<Role>()
+                .eq(Role::getId,roleChangeVo.getRoleId())
+                .set(Role::getStatus, roleChangeVo.getStatus());
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult deleteRole(Long id) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+    public ResponseResult<Object> deleteRole(Long id) {
+        LambdaUpdateWrapper<Role> updateWrapper = new LambdaUpdateWrapper<Role>()
+                .eq(Role::getId,id)
+                .set(Role::getDelFlag, SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult getAllRole() {
+    public ResponseResult<Object> getAllRole() {
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Role::getStatus,0);
         List<Role> list = list(wrapper);
-        return new ResponseResult(200,"操作成功",list);
+        return new ResponseResult<>(200,"操作成功",list);
     }
 }

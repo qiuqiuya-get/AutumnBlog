@@ -14,16 +14,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface LinkService extends IService<Link> {
 
-    ResponseResult getAllLink();
+    ResponseResult<Object> getAllLink();
 
-    ResponseResult linkList(Integer pageNum, Integer pageSize, String name, Integer status);
+    ResponseResult<Object> linkList(Integer pageNum, Integer pageSize, String name, Integer status);
 
-    ResponseResult addTag(Link link);
+    ResponseResult<Object> addTag(Link link);
 
     LinkUpdateDto getOneUpdate(Long id);
 
-    ResponseResult updateTag(Link link);
+    ResponseResult<Object> updateTag(Link link);
 
-    ResponseResult deleteLink(Long id);
+    ResponseResult<Object> deleteLink(Long id);
 }
 

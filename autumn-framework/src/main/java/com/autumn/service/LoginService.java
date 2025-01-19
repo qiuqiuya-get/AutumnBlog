@@ -9,7 +9,7 @@ import com.autumn.domain.entity.User;
  * @Date: 2023/6/1 10:23
  */
 public interface LoginService {
-    ResponseResult login(User user);
+    ResponseResult<Object> login(User user);
 
-    ResponseResult logout();
+    ResponseResult<Object> logout();
 }

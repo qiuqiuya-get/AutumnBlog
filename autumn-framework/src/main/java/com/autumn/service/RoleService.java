@@ -15,12 +15,12 @@ import java.util.List;
 public interface RoleService extends IService<Role> {
     List<String> selectRoleKeyByUserId(Long id);
 
-    ResponseResult getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status);
+    ResponseResult<Object> getRoleList(Integer pageNum, Integer pageSize, String roleName, Integer status);
 
-    ResponseResult changeStatus(RoleChangeVo roleChangeVo);
+    ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo);
 
-    ResponseResult deleteRole(Long id);
+    ResponseResult<Object> deleteRole(Long id);
 
-    ResponseResult getAllRole();
+    ResponseResult<Object> getAllRole();
 }
 

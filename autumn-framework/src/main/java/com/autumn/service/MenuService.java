@@ -18,14 +18,14 @@ public interface MenuService extends IService<Menu> {
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
 
-    ResponseResult menuList(Integer status, String menuName);
+    ResponseResult<Object> menuList(Integer status, String menuName);
 
-    ResponseResult addMenu(Menu menu);
+    ResponseResult<Object> addMenu(Menu menu);
 
-    ResponseResult menuById(Long id);
+    ResponseResult<Object> menuById(Long id);
 
-    ResponseResult updateMenu(Menu menu);
+    ResponseResult<Object> updateMenu(Menu menu);
 
-    ResponseResult deleteMenu(Long id);
+    ResponseResult<Object> deleteMenu(Long id);
 }
 

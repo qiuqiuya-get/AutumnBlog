@@ -2,9 +2,7 @@ package com.autumn.service.impl;
 
 import com.autumn.constants.SystemConstants;
 import com.autumn.domain.ResponseResult;
-import com.autumn.domain.entity.Category;
 import com.autumn.domain.entity.Link;
-import com.autumn.domain.vo.CategoryUpdateVo;
 import com.autumn.domain.vo.LinkUpdateDto;
 import com.autumn.domain.vo.LinkVo;
 import com.autumn.domain.vo.PageVo;
@@ -12,8 +10,7 @@ import com.autumn.mapper.LinkMapper;
 import com.autumn.service.LinkService;
 import com.autumn.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ import java.util.Objects;
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
     @Override
-    public ResponseResult getAllLink() {
+    public ResponseResult<Object> getAllLink() {
         //查询所有审核通过的
         LambdaQueryWrapper<Link> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Link::getStatus, SystemConstants.LINK_STATUS_NORMAL);
@@ -44,7 +41,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     }
 
     @Override
-    public ResponseResult linkList(Integer pageNum, Integer pageSize, String name, Integer status) {
+    public ResponseResult<Object> linkList(Integer pageNum, Integer pageSize, String name, Integer status) {
         //分页查询
         LambdaQueryWrapper<Link> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (!Objects.isNull(name)){
@@ -64,38 +61,37 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     }
 
     @Override
-    public ResponseResult addTag(Link link) {
+    public ResponseResult<Object> addTag(Link link) {
         save(link);
         return ResponseResult.okResult();
     }
 
     @Override
     public LinkUpdateDto getOneUpdate(Long id) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("id",id);
+        LambdaQueryWrapper<Link> queryWrapper = new LambdaQueryWrapper<Link>()
+                .eq(Link::getId,id);
         Link link = getOne(queryWrapper);
-        LinkUpdateDto linkUpdateDto = BeanCopyUtils.copyBean(link, LinkUpdateDto.class);
-        return linkUpdateDto;
+        return BeanCopyUtils.copyBean(link, LinkUpdateDto.class);
     }
 
     @Override
-    public ResponseResult updateTag(Link link) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",link.getId());
-        updateWrapper.set("status",link.getStatus());
-        updateWrapper.set("name", link.getName());
-        updateWrapper.set("description",link.getDescription());
-        updateWrapper.set("address",link.getAddress());
-        updateWrapper.set("logo",link.getLogo());
+    public ResponseResult<Object> updateTag(Link link) {
+        LambdaUpdateWrapper<Link> updateWrapper = new LambdaUpdateWrapper<Link>()
+                .eq(Link::getId,link.getId())
+                .set(Link::getStatus,link.getStatus())
+                .set(Link::getName, link.getName())
+                .set(Link::getDescription,link.getDescription())
+                .set(Link::getAddress,link.getAddress())
+                .set(Link::getLogo,link.getLogo());
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult deleteLink(Long id) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+    public ResponseResult<Object> deleteLink(Long id) {
+        LambdaUpdateWrapper<Link> updateWrapper = new LambdaUpdateWrapper<Link>()
+                .eq(Link::getId,id)
+                .set(Link::getDelFlag, SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }

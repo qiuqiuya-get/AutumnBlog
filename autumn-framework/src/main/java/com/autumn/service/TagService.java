@@ -22,11 +22,11 @@ public interface TagService extends IService<Tag> {
 
     List<TagVo> listAllTag();
 
-    ResponseResult addTag(Tag tag);
+    ResponseResult<Object> addTag(Tag tag);
 
-    ResponseResult deleteTag(Long id);
+    ResponseResult<Object> deleteTag(Long id);
 
-    ResponseResult updateTag(Tag tag);
+    ResponseResult<Object> updateTag(Tag tag);
 
     TagUpdateVo getOne(Long id);
 }

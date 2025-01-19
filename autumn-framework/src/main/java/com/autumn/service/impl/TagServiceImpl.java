@@ -11,8 +11,7 @@ import com.autumn.mapper.TagMapper;
 import com.autumn.service.TagService;
 import com.autumn.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -49,42 +48,40 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Tag::getId,Tag::getName);
         List<Tag> list = list(wrapper);
-        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(list, TagVo.class);
-        return tagVos;
+        return BeanCopyUtils.copyBeanList(list, TagVo.class);
     }
 
     @Override
-    public ResponseResult addTag(Tag tag) {
+    public ResponseResult<Object> addTag(Tag tag) {
         save(tag);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult deleteTag(Long id) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",id);
-        updateWrapper.set("del_flag", SystemConstants.DELETE_FLAG);
+    public ResponseResult<Object> deleteTag(Long id) {
+        LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<Tag>()
+                .eq(Tag::getId,id)
+                .set(Tag::getDelFlag, SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult updateTag(Tag tag) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("id",tag.getId());
-        updateWrapper.set("name", tag.getName());
-        updateWrapper.set("remark",tag.getRemark());
+    public ResponseResult<Object> updateTag(Tag tag) {
+        LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<Tag>()
+                .eq(Tag::getId,tag.getId())
+                .set(Tag::getName, tag.getName())
+                .set(Tag::getRemark,tag.getRemark());
         update(updateWrapper);
-        return null;
+        return ResponseResult.okResult();
     }
 
     @Override
     public TagUpdateVo getOne(Long id) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("id",id);
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<Tag>()
+                .eq(Tag::getId,id);
         Tag tag = getOne(queryWrapper);
-        TagUpdateVo tagUpdateVo = BeanCopyUtils.copyBean(tag, TagUpdateVo.class);
-        return tagUpdateVo;
+        return BeanCopyUtils.copyBean(tag, TagUpdateVo.class);
     }
 }
 

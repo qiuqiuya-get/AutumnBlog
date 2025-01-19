@@ -3,11 +3,7 @@ package com.autumn.service.impl;
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.LoginUser;
 import com.autumn.domain.entity.User;
-import com.autumn.domain.vo.BlogUserLoginVo;
-import com.autumn.domain.vo.UserInfoVo;
-import com.autumn.service.BlogLoginService;
 import com.autumn.service.LoginService;
-import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.JwtUtil;
 import com.autumn.utils.RedisCache;
 import com.autumn.utils.SecurityUtils;
@@ -15,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,7 +31,7 @@ public class SystemLoginServiceImpl implements LoginService {
     private RedisCache redisCache;
 
     @Override
-    public ResponseResult login(User user) {
+    public ResponseResult<Object> login(User user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //判断是否认证通过
@@ -56,7 +51,7 @@ public class SystemLoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResponseResult logout() {
+    public ResponseResult<Object> logout() {
         //获取当前登录的用户id
         Long userId = SecurityUtils.getUserId();
         //删除redis中对应的值
