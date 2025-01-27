@@ -1,4 +1,4 @@
-package com.autumn.controllter;
+package com.autumn.controller;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.entity.Menu;

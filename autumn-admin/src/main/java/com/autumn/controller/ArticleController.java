@@ -1,4 +1,4 @@
-package com.autumn.controllter;
+package com.autumn.controller;
 
 import com.autumn.domain.ResponseResult;
 import com.autumn.domain.dto.AddArticleDto;
@@ -18,27 +18,27 @@ public class ArticleController {
     private ArticleService articleService;
 
     @PostMapping
-    public ResponseResult<Object> add(@RequestBody AddArticleDto article){
+    public ResponseResult<Object> add(@RequestBody AddArticleDto article) {
         return articleService.add(article);
     }
 
     @GetMapping("/list")
-    public ResponseResult<Object> articleList(int pageNum, int pageSize, String title, String summary){
-        return articleService.articleList(pageNum,pageSize,title,summary);
+    public ResponseResult<Object> articleList(int pageNum, int pageSize, String title, String summary) {
+        return articleService.articleList(pageNum, pageSize, title, summary);
     }
 
     @GetMapping("/{id}")
-    public ResponseResult<Object> articleDetail(@PathVariable("id") Long id){
+    public ResponseResult<Object> articleDetail(@PathVariable("id") Long id) {
         return articleService.getArticleDetail(id);
     }
 
     @PutMapping
-    public ResponseResult<Object> articleUpdate(@RequestBody Article article){
+    public ResponseResult<Object> articleUpdate(@RequestBody Article article) {
         return articleService.updateArticle(article);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseResult<Object> deleteArticle(@PathVariable("id") Long id){
+    public ResponseResult<Object> deleteArticle(@PathVariable("id") Long id) {
         return articleService.delete(id);
     }
 
