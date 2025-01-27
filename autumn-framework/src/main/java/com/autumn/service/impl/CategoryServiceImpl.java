@@ -12,8 +12,8 @@ import com.autumn.mapper.CategoryMapper;
 import com.autumn.service.ArticleService;
 import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -39,8 +39,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public ResponseResult<Object> getCategoryList() {
         //查询文章表  状态为已发布的文章
-        LambdaQueryWrapper<Article> articleWrapper = new LambdaQueryWrapper<>();
-        articleWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        QueryWrapper<Article> articleWrapper = new QueryWrapper<>();
+        articleWrapper.eq("status", SystemConstants.ARTICLE_STATUS_NORMAL);
         List<Article> articleList = articleService.list(articleWrapper);
         //获取文章的分类id，并且去重
         Set<Long> categoryIds = articleList.stream()
@@ -60,8 +60,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<CategoryVo> listAllCategory() {
-        LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Category::getStatus, SystemConstants.NORMAL);
+        QueryWrapper<Category> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", SystemConstants.NORMAL);
         List<Category> list = list(wrapper);
         return BeanCopyUtils.copyBeanList(list, CategoryVo.class);
     }
@@ -69,18 +69,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public ResponseResult<Object> categoryList(Integer pageNum, Integer pageSize, String name, Integer status) {
         //分页查询
-        LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Category> QueryWrapper = new QueryWrapper<>();
         if (!Objects.isNull(name)) {
-            lambdaQueryWrapper.like(Category::getName, name);
+            QueryWrapper.like("name", name);
         }
         if (!Objects.isNull(status)) {
-            lambdaQueryWrapper.eq(Category::getStatus, status);
+            QueryWrapper.eq("status", status);
         }
 
         Page<Category> page = new Page<>();
         page.setCurrent(pageNum);
         page.setSize(pageSize);
-        page(page, lambdaQueryWrapper);
+        page(page, QueryWrapper);
         //封装数据返回
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
@@ -88,18 +88,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo) {
-        LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<Category>()
-                .eq(Category::getId, roleChangeVo.getRoleId())
-                .set(Category::getStatus, roleChangeVo.getStatus());
+        UpdateWrapper<Category> updateWrapper = new UpdateWrapper<Category>()
+                .eq("id", roleChangeVo.getRoleId())
+                .set("status", roleChangeVo.getStatus());
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
     public ResponseResult<Object> deleteRole(Long id) {
-        LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<Category>()
-                .eq(Category::getId, id)
-                .set(Category::getDelFlag, SystemConstants.DELETE_FLAG);
+        UpdateWrapper<Category> updateWrapper = new UpdateWrapper<Category>()
+                .eq("id", id)
+                .set("del_flag", SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
@@ -112,19 +112,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public CategoryUpdateVo getOneUpdate(Long id) {
-        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<Category>()
-                .eq(Category::getId, id);
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>()
+                .eq("id", id);
         Category category = getOne(queryWrapper);
         return BeanCopyUtils.copyBean(category, CategoryUpdateVo.class);
     }
 
     @Override
     public ResponseResult<Object> updateTag(Category category) {
-        LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<Category>()
-                .eq(Category::getId, category.getId())
-                .set(Category::getStatus, category.getStatus())
-                .set(Category::getName, category.getName())
-                .set(Category::getDescription, category.getDescription());
+        UpdateWrapper<Category> updateWrapper = new UpdateWrapper<Category>()
+                .eq("id", category.getId())
+                .set("status", category.getStatus())
+                .set("name", category.getName())
+                .set("description", category.getDescription());
         update(updateWrapper);
         return ResponseResult.okResult();
     }

@@ -17,8 +17,8 @@ import com.autumn.service.ArticleTagService;
 import com.autumn.service.CategoryService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.RedisCache;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ import static com.autumn.constants.SystemConstants.ARTICLE_STATUS_NORMAL;
 
 /**
  * @Author: qiuqiuya
- * @Date: 2023/5/25 23:00
+ * @Date: 2023/5/25 23:00   
  */
 @Component
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
@@ -47,9 +47,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult<Object> hotArticleList() {
         //查询热门文章 封装成ResponseResult返回
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<Article>()
-                .eq(Article::getStatus, ARTICLE_STATUS_NORMAL)//必须是正式文章
-                .orderByDesc(Article::getViewCount);//按照浏览量进行排序
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<Article>()
+                .eq("status", ARTICLE_STATUS_NORMAL)//必须是正式文章
+                .orderByDesc("view_count");//按照浏览量进行排序
         //最多只查询10条
         Page<Article> page = new Page<>(1, ARTICLE_MAXIMUM_NUMBER);
         page(page, queryWrapper);
@@ -66,18 +66,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult<Object> articleList(Integer pageNum, Integer pageSize, Long categoryId) {
         //查询条件
-        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Article> QueryWrapper = new QueryWrapper<>();
         // 如果 有categoryId 就要 查询时要和传入的相同
-        lambdaQueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0, Article::getCategoryId, categoryId);
+        QueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0, "category_id", categoryId);
         // 状态是正式发布的
-        lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        QueryWrapper.eq("status", SystemConstants.ARTICLE_STATUS_NORMAL);
         // 对isTop进行降序
-        lambdaQueryWrapper.orderByDesc(Article::getId);
-        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        QueryWrapper.orderByDesc("id");
+        QueryWrapper.orderByDesc("is_top");
 
         //分页查询
         Page<Article> page = new Page<>(pageNum, pageSize);
-        page(page, lambdaQueryWrapper);
+        page(page, QueryWrapper);
 
         List<Article> articles = page.getRecords();
         //查询categoryName
@@ -141,21 +141,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult<Object> articleList(int pageNum, int pageSize, String title, String summary) {
         //查询条件
-        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Article> QueryWrapper = new QueryWrapper<>();
         if (!Objects.isNull(title)) {
-            lambdaQueryWrapper.like(Article::getTitle, title);
+            QueryWrapper.like("title", title);
         }
         if (!Objects.isNull(summary)) {
-            lambdaQueryWrapper.like(Article::getSummary, summary);
+            QueryWrapper.like("summary", summary);
         }
         // 状态是正式发布的
-        lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        QueryWrapper.eq("status", SystemConstants.ARTICLE_STATUS_NORMAL);
         // 对isTop进行降序
-        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        QueryWrapper.orderByDesc("is_top");
 
         //分页查询
         Page<Article> page = new Page<>(pageNum, pageSize);
-        page(page, lambdaQueryWrapper);
+        page(page, QueryWrapper);
 
         List<Article> articles = page.getRecords();
         //查询categoryName
@@ -178,9 +178,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ResponseResult<Object> delete(Long id) {
-        LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<Article>()
-                .eq(Article::getId, id)
-                .eq(Article::getDelFlag, SystemConstants.DELETE_FLAG);
+        UpdateWrapper<Article> updateWrapper = new UpdateWrapper<Article>()
+                .eq("id", id)
+                .eq("del_flag", SystemConstants.DELETE_FLAG);
         boolean update = update(updateWrapper);
         return update ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }

@@ -7,8 +7,8 @@ import com.autumn.domain.entity.Menu;
 import com.autumn.mapper.MenuMapper;
 import com.autumn.service.MenuService;
 import com.autumn.utils.SecurityUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +29,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<String> selectPermsByUserId(Long id) {
         //如果是管理员，返回所有的权限
         if(id == 1L){
-            LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(Menu::getMenuType,SystemConstants.MENU,SystemConstants.BUTTON);
-            wrapper.eq(Menu::getStatus, SystemConstants.STATUS_NORMAL);
+            QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+            wrapper.in("menu_type",SystemConstants.MENU,SystemConstants.BUTTON);
+            wrapper.eq("status", SystemConstants.STATUS_NORMAL);
             List<Menu> menus = list(wrapper);
             return menus.stream()
                     .map(Menu::getPerms)
@@ -61,16 +61,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public ResponseResult<Object> menuList(Integer status, String menuName) {
-        LambdaQueryWrapper<Menu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Menu> QueryWrapper = new QueryWrapper<>();
         if (!Objects.isNull(menuName)){
-            lambdaQueryWrapper.like(Menu::getMenuName,menuName);
+            QueryWrapper.like("menu_name",menuName);
         }
         if (!Objects.isNull(status)) {
-            lambdaQueryWrapper.eq(Menu::getStatus, status);
+            QueryWrapper.eq("status", status);
         }
         // 对isTop进行降序
-        lambdaQueryWrapper.orderByAsc(Menu::getOrderNum);
-        List<Menu> list = list(lambdaQueryWrapper);
+        QueryWrapper.orderByAsc("order_num");
+        List<Menu> list = list(QueryWrapper);
         return ResponseResult.okResult(list);
     }
 
@@ -97,15 +97,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public ResponseResult<Object> deleteMenu(Long id) {
-        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<Menu>()
-                .eq(Menu::getId,id);
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<Menu>()
+                .eq("id",id);
         System.out.println("---------"+getMap(queryWrapper));
         if (!Objects.isNull(getMap(queryWrapper))){
             return ResponseResult.errorResult(500,"存在子菜单不允许删除");
         }else {
-            LambdaUpdateWrapper<Menu> updateWrapper = new LambdaUpdateWrapper<Menu>()
-                    .eq(Menu::getId,id)
-                    .set(Menu::getDelFlag, SystemConstants.DELETE_FLAG);
+            UpdateWrapper<Menu> updateWrapper = new UpdateWrapper<Menu>()
+                    .eq("id",id)
+                    .set("del_flag", SystemConstants.DELETE_FLAG);
             update(updateWrapper);
             return ResponseResult.okResult();
         }

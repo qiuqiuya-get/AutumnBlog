@@ -10,8 +10,8 @@ import com.autumn.domain.vo.TagVo;
 import com.autumn.mapper.TagMapper;
 import com.autumn.service.TagService;
 import com.autumn.utils.BeanCopyUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -30,9 +30,9 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     public ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
         //分页查询
-        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.hasText(tagListDto.getName()),Tag::getName,tagListDto.getName());
-        queryWrapper.eq(StringUtils.hasText(tagListDto.getRemark()),Tag::getRemark,tagListDto.getRemark());
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(tagListDto.getName()),"name",tagListDto.getName());
+        queryWrapper.eq(StringUtils.hasText(tagListDto.getRemark()),"remark",tagListDto.getRemark());
 
         Page<Tag> page = new Page<>();
         page.setCurrent(pageNum);
@@ -45,8 +45,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     public List<TagVo> listAllTag() {
-        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Tag::getId,Tag::getName);
+        QueryWrapper<Tag> wrapper = new QueryWrapper<>();
+        wrapper.select("id","name");
         List<Tag> list = list(wrapper);
         return BeanCopyUtils.copyBeanList(list, TagVo.class);
     }
@@ -59,27 +59,27 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     public ResponseResult<Object> deleteTag(Long id) {
-        LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<Tag>()
-                .eq(Tag::getId,id)
-                .set(Tag::getDelFlag, SystemConstants.DELETE_FLAG);
+        UpdateWrapper<Tag> updateWrapper = new UpdateWrapper<Tag>()
+                .eq("id",id)
+                .set("del_flag", SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
     public ResponseResult<Object> updateTag(Tag tag) {
-        LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<Tag>()
-                .eq(Tag::getId,tag.getId())
-                .set(Tag::getName, tag.getName())
-                .set(Tag::getRemark,tag.getRemark());
+        UpdateWrapper<Tag> updateWrapper = new UpdateWrapper<Tag>()
+                .eq("id",tag.getId())
+                .set("name", tag.getName())
+                .set("remark",tag.getRemark());
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
     public TagUpdateVo getOne(Long id) {
-        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<Tag>()
-                .eq(Tag::getId,id);
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>()
+                .eq("id",id);
         Tag tag = getOne(queryWrapper);
         return BeanCopyUtils.copyBean(tag, TagUpdateVo.class);
     }

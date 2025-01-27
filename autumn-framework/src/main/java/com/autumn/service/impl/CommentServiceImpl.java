@@ -11,7 +11,7 @@ import com.autumn.mapper.CommentMapper;
 import com.autumn.service.CommentService;
 import com.autumn.service.UserService;
 import com.autumn.utils.BeanCopyUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +35,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public ResponseResult<Object> commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
         //查询对应文章的根评论
-        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         //对articleId进行判断
-        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType),Comment::getArticleId,articleId);
+        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType),"article_id",articleId);
         //根评论 rootId为-1
-        queryWrapper.eq(Comment::getRootId,-1);
+        queryWrapper.eq("root_id",-1);
 
         //评论类型
-        queryWrapper.eq(Comment::getType,commentType);
+        queryWrapper.eq("type",commentType);
 
         //分页查询
         Page<Comment> page = new Page<>(pageNum,pageSize);
@@ -81,9 +81,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      */
     private List<CommentVo> getChildren(Long id) {
 
-        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getRootId,id);
-        queryWrapper.orderByAsc(Comment::getCreateTime);
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("root_id",id);
+        queryWrapper.orderByAsc("createTime");
         List<Comment> comments = list(queryWrapper);
 
         return toCommentVoList(comments);

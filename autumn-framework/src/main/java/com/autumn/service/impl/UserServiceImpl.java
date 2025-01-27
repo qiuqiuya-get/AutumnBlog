@@ -12,8 +12,8 @@ import com.autumn.mapper.UserMapper;
 import com.autumn.service.UserService;
 import com.autumn.utils.BeanCopyUtils;
 import com.autumn.utils.SecurityUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,15 +85,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public ResponseResult<Object> getUserList(Integer pageNum, Integer pageSize, String userName, String phonenumber, Integer status) {
         //分页查询
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (!Objects.isNull(userName)){
-            queryWrapper.like(User::getUserName,userName);
+            queryWrapper.like("userName",userName);
         }
         if (!Objects.isNull(phonenumber)) {
-            queryWrapper.eq(User::getPhonenumber, phonenumber);
+            queryWrapper.eq("phonenumber", phonenumber);
         }
         if (!Objects.isNull(status)) {
-            queryWrapper.eq(User::getStatus, status);
+            queryWrapper.eq("status", status);
         }
 
         Page<User> page = new Page<>();
@@ -107,31 +107,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public ResponseResult<Object> deleteUser(Long id) {
-        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>()
-                .eq(User::getId,id)
-                .set(User::getDelFlag, SystemConstants.DELETE_FLAG);
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+                .eq("id",id)
+                .set("del_flag", SystemConstants.DELETE_FLAG);
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     @Override
     public ResponseResult<Object> changeStatus(RoleChangeVo roleChangeVo) {
-        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>()
-                .eq(User::getId,roleChangeVo.getRoleId())
-                .set(User::getStatus, roleChangeVo.getStatus());
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+                .eq("id",roleChangeVo.getRoleId())
+                .set("status", roleChangeVo.getStatus());
         update(updateWrapper);
         return ResponseResult.okResult();
     }
 
     private boolean nickNameExist(String nickName) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getNickName,nickName);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("nick_name",nickName);
         return count(queryWrapper)>0;
     }
 
     private boolean userNameExist(String userName) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUserName,userName);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name",userName);
         return count(queryWrapper)>0;
     }
 }
